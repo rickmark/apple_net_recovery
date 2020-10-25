@@ -7,7 +7,7 @@ network.
 
 ## Verification of BaseSystem.dmg and OSDInstall.dmg
 
-See `doc/chunklist_v1.md`
+See `doc/chunklist_v1.md` and [https://github.com/t8012/cnklverify]
 
 
 ## Request / Response of Internet Recovery image location
@@ -29,7 +29,8 @@ PKI based crypto in older (read Lion 10.9) versions of IR.
 
 ### Request Format
 
-Requests are made to `http://osrecovery.apple.com/InstallationPayload/RecoveryImage`
+A session cookie is requestd from `http://osrecovery.apple.com/` then
+A request is made to `http://osrecovery.apple.com/InstallationPayload/RecoveryImage`
 
 A request is in the form of:
 
@@ -43,13 +44,13 @@ A request is in the form of:
 
 An analysis of variables comes to these assumed names
 
-* cid - ChipID
-* SN - Motherboard Serial number
-* bid - Board ID
-* k - Key or some form of challenge
-* os - The requested OS
-* bv - Board version
-* fg - Anti forgery challenge
+* `cid` - The T2 ECID
+* `sn` - Motherboard Serial number
+* `bid` - Board ID (BDID)
+* `k` - Key or some form of challenge (unknown, server accepts any value)
+* `os` - The requested OS
+* `bv` - Version of bridgeOS
+* `fg` - Anti forgery challenge (unknown, server accepts any value)
 
 
 ### Response Format
@@ -66,10 +67,10 @@ A response is in the form of
 
 An analysis shows the following values
 
-* AP - Apple's update ID for the packge
-* AU - base system URL to download from
+* AP - Apple's update ID for the packge, from the software update catalog
+* AU - base system URL to download from (dmg)
 * AH - Some form of hash for the base system URL / content
-* AT - BaseSystem url token cookie
+* AT - BaseSystem url token cookie (Passed in the next request as a cookie header)
 * CU - chunklist URL (this becomes dangerous if downgrade attacked to v1)
 * CH - Chunklist url hash / content
-* CT - Chunklist url token cookie
+* CT - Chunklist url token cookie (Passed in the next request as a cookie header)
